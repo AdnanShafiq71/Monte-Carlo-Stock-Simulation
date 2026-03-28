@@ -12,14 +12,22 @@ price = 1000
 #I want to show the history of the price changes after every step
 history = [price]
 #I want to tell python to make the price take 100 steps
+
+print("Loop is starting...") # Diagnostic print
+
 for i in range(1000):
     step = random.uniform(-10, 10)
     price = price + step
-
-#We cannot have a price below 0 in the market for this asset. I want to ensure that the price never goes below 0 using an if statement
+    
     if price <= 0:
         price = 0
         history.append(price)
+        print("Stock went bankrupt!")
+        break
+    
+    history.append(price)
+
+print(f"Loop finished. Items in history: {len(history)}")
 print(history)
 
 #I have installed the library called matplotlib to create a visual representation of the price changes
