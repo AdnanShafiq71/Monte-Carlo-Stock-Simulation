@@ -6,3 +6,14 @@ import random
 step = random.uniform(-10, 10)
 #I am printing the value of 'step' to the console
 print(step)
+
+#I want to create a starting point for the price
+price = 1000
+#I want to show the history of the price changes after every step
+history = [price]
+#I want to tell python to make the price take 100 steps
+for i in range(1000):
+    step = random.uniform(-10, 10)
+    price = price + step
+    history.append(price)
+print(history)
