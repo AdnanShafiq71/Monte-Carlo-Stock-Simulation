@@ -15,5 +15,11 @@ history = [price]
 for i in range(1000):
     step = random.uniform(-10, 10)
     price = price + step
-    history.append(price)
+
+#We cannot have a price below 0 in the market for this asset. I want to ensure that the price never goes below 0 using an if statement
+    if price <= 0:
+        price = 0
+
+history.append(price)
 print(history)
+
