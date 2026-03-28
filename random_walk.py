@@ -19,7 +19,13 @@ for i in range(1000):
 #We cannot have a price below 0 in the market for this asset. I want to ensure that the price never goes below 0 using an if statement
     if price <= 0:
         price = 0
-
-history.append(price)
+        history.append(price)
 print(history)
 
+#I have installed the library called matplotlib to create a visual representation of the price changes
+import matplotlib.pyplot as plt
+plt.plot(history)
+plt.title("Simple Random Walk")
+plt.xlabel("Days")
+plt.ylabel("Price")
+plt.show()
