@@ -1,6 +1,7 @@
 
 #Current formula: Price(t+1) = Price(t) * (1 + percentage change)
 
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.dates as mdates
@@ -37,6 +38,10 @@ drift = 0.0001
 
 plt.figure(figsize=(12, 7))
 
+#I want to create an expected value line in the blue cloud of the Monte Carlo simulation.
+all_final_prices = []
+all_histories = []
+
 #I want to run the random walk 1000 times to see the different possible outcomes of the stock price.
 for s in range(simulations):
     price = 1000
@@ -52,6 +57,9 @@ for s in range(simulations):
             history.append(price)
             break
         history.append(price)
+
+    all_final_prices.append(price)
+    all_histories.append(history)        
 
     plot_times = [start_time + timedelta(minutes=j) for j in range(len(history))]
     plt.plot(plot_times, history, alpha = 0.05, linewidth = 0.5, color = "blue")
@@ -72,4 +80,19 @@ ax.xaxis.set_major_locator(mdates.MinuteLocator(byminute=[0, 30]))
 # Tilting the labels so they don't overlap
 plt.gcf().autofmt_xdate()
 plt.grid(True, linestyle=':', alpha=0.05)
+
+final_time_axis = [start_time + timedelta(minutes=j) for j in range(391)]
+mean_path = np.mean(all_histories, axis=0)
+plt.plot(plot_times, mean_path, color="red", linewidth=3, label="Average Path")
+#Get the very last price from the average path
+final_mean_price = mean_path[-1]
+# Adding a text label at the end of the line
+# Placing it at the last time (4:00 PM) and the final price
+plt.text(final_time_axis[-1], final_mean_price, f'  Expected: ${final_mean_price:.2f}', 
+         color="red", fontweight="bold", va="center")
+# Adding a horizontal dashed line to show the "Starting Price" for comparison
+plt.axhline(y=1000, color="black", linestyle="--", alpha=0.5, label="Start Price")
+# Adding a legend so we know what the Red and Blue mean
+plt.legend(loc="upper left")
+
 plt.show()
