@@ -1,3 +1,7 @@
+
+#Current formula: Price(t+1) = Price(t) + step
+
+
 import matplotlib.dates as mdates
 
 #I want the x axis of the graph to have time rather than counting the number of steps as days. I want to make each step one minute
