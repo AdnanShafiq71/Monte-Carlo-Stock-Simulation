@@ -34,9 +34,7 @@ price = 1000
 history = [price]
 
 #I want to add drift to the price changes. Drift is a constant value that represents the expected return of the stock over time.
-drift = 0.0001
-
-plt.figure(figsize=(12, 7))
+drift = 0.0002
 
 #I want to create an expected value line in the blue cloud of the Monte Carlo simulation.
 all_final_prices = []
@@ -62,37 +60,47 @@ for s in range(simulations):
     all_histories.append(history)        
 
     plot_times = [start_time + timedelta(minutes=j) for j in range(len(history))]
-    plt.plot(plot_times, history, alpha = 0.05, linewidth = 0.5, color = "blue")
 
-plt.title("Monte Carlo Simulation of Stock Price Changes")
-plt.xlabel("Time (minutes)")
-plt.ylabel("Stock Price ($)")
 
-# Getting the current "axes" (the plot itself)
-ax = plt.gca()
-
-# Formatting the time to only show Hour:Minute
-ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
-
-# Telling the graph to only show a label every 30 minutes
-ax.xaxis.set_major_locator(mdates.MinuteLocator(byminute=[0, 30]))
-
-# Tilting the labels so they don't overlap
-plt.gcf().autofmt_xdate()
-plt.grid(True, linestyle=':', alpha=0.05)
-
-final_time_axis = [start_time + timedelta(minutes=j) for j in range(391)]
+# --- CALCULATE DATA ---
 mean_path = np.mean(all_histories, axis=0)
-plt.plot(plot_times, mean_path, color="red", linewidth=3, label="Average Path")
-#Get the very last price from the average path
+final_time_axis = [start_time + timedelta(minutes=j) for j in range(391)]
 final_mean_price = mean_path[-1]
-# Adding a text label at the end of the line
-# Placing it at the last time (4:00 PM) and the final price
-plt.text(final_time_axis[-1], final_mean_price, f'  Expected: ${final_mean_price:.2f}', 
-         color="red", fontweight="bold", va="center")
-# Adding a horizontal dashed line to show the "Starting Price" for comparison
-plt.axhline(y=1000, color="black", linestyle="--", alpha=0.5, label="Start Price")
-# Adding a legend so we know what the Red and Blue mean
-plt.legend(loc="upper left")
 
+# --- CREATING THE SINGLE FIGURE ---
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 7), gridspec_kw={'width_ratios': [2, 1]})
+
+# --- DRAWING THE CLOUD ---
+for h in all_histories:
+    ax1.plot(final_time_axis, h, color="blue", alpha=0.02, linewidth=0.5)
+
+# Plotting the Mean Path on ax1
+ax1.plot(final_time_axis, mean_path, color="red", linewidth=3, label="Average Path")
+
+# ADDING THE LABEL BACK
+ax1.text(final_time_axis[-1], final_mean_price, f'  Expected: ${final_mean_price:.2f}', 
+         color="red", fontweight="bold", va="center")
+
+# Visual formatting for ax1
+ax1.axhline(y=1000, color="black", linestyle="--", alpha=0.5, label="Start Price")
+ax1.set_title(f"Monte Carlo Simulation: {simulations} Scenarios", fontsize=12)
+ax1.set_xlabel("Time of Day")
+ax1.set_ylabel("Price ($)")
+ax1.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
+ax1.xaxis.set_major_locator(mdates.MinuteLocator(byminute=[0, 30]))
+ax1.legend(loc="upper left")
+ax1.grid(True, linestyle=':', alpha=0.3)
+
+# --- DRAWING THE HISTOGRAM ---
+ax2.hist(all_final_prices, bins=50, orientation='horizontal', color='blue', alpha=0.3, edgecolor='white')
+ax2.axhline(y=final_mean_price, color='red', linewidth=2, linestyle='-')
+ax2.set_title("Distribution of Final Prices", fontsize=12)
+ax2.set_xlabel("Frequency (Count)")
+# Syncing the Y-axis of the histogram with the price of the cloud
+ax2.set_ylim(ax1.get_ylim()) 
+
+# --- FINISH ---
+plt.gcf().autofmt_xdate()
+plt.tight_layout()
+print(f"Analysis Complete. Average Final Price: ${final_mean_price:.2f}")
 plt.show()
