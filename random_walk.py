@@ -114,4 +114,20 @@ ax2.text(0.5, 0.9, f"Prob. of Profit: {prob_profit:.1f}%",
 plt.gcf().autofmt_xdate()
 plt.tight_layout()
 print(f"Analysis Complete. Average Final Price: ${final_mean_price:.2f}")
+
+# --- RISK SUMMARY STATISTICS ---
+max_price = max(all_final_prices)
+min_price = min(all_final_prices)
+avg_price = np.mean(all_final_prices)
+
+print("-" * 30)
+print(f"MONTE CARLO RISK REPORT")
+print("-" * 30)
+print(f"Total Simulations: {simulations}")
+print(f"Probability of Profit: {prob_profit:.2f}%")
+print(f"Average Final Price: ${avg_price:.2f}")
+print(f"Best Case Scenario:  ${max_price:.2f}")
+print(f"Worst Case Scenario: ${min_price:.2f}")
+print("-" * 30)
+
 plt.show()
