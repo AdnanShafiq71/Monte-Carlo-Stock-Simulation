@@ -18,7 +18,7 @@ import random
 simulations = 1000
 
 #I am adding volatility to the price changes. Some days may be quiet and some more volatile. We need a variable that can represent this.
-volatility = 0.01
+volatility = 0.05
 
 #I am generating a random number between -10 and 10 and storing it as the variable 'step'
 #I could choose random.randint if I wanted to generate a random integer however, a random decimal seems more appropriate for a fluctuating stock price
@@ -68,6 +68,9 @@ final_time_axis = [start_time + timedelta(minutes=j) for j in range(391)]
 final_mean_price = mean_path[-1]
 
 # --- CREATING THE SINGLE FIGURE ---
+# Calculate how many of the 1000 runs ended above the $1000 starting price
+wins = sum(1 for p in all_final_prices if p > 1000)
+prob_profit = (wins / simulations) * 100
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 7), gridspec_kw={'width_ratios': [2, 1]})
 
 # --- DRAWING THE CLOUD ---
@@ -98,6 +101,14 @@ ax2.set_title("Distribution of Final Prices", fontsize=12)
 ax2.set_xlabel("Frequency (Count)")
 # Syncing the Y-axis of the histogram with the price of the cloud
 ax2.set_ylim(ax1.get_ylim()) 
+ax2.text(0.5, 0.9, f"Prob. of Profit: {prob_profit:.1f}%", 
+         transform=ax2.transAxes, 
+         ha="center", 
+         va="center", 
+         fontsize=12, 
+         fontweight="bold", 
+         color="green",
+         bbox=dict(facecolor='white', alpha=0.8, edgecolor='none'))
 
 # --- FINISH ---
 plt.gcf().autofmt_xdate()
