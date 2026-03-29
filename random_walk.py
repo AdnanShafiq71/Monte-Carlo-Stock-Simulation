@@ -12,14 +12,19 @@ times = [start_time]
 #I am importing the random module to generate random numbers
 import random
 
+#I am adding volatility to the price changes. Some days may be quiet and some more volatile. We need a variable that can represent this.
+volatility = 5
+
 #I am generating a random number between -10 and 10 and storing it as the variable 'step'
 #I could choose random.randint if I wanted to generate a random integer however, a random decimal seems more appropriate for a fluctuating stock price
-step = random.uniform(-10, 10)
+step = random.uniform(-volatility, volatility)
+
 #I am printing the value of 'step' to the console
 print(step)
 
 #I want to create a starting point for the price
 price = 1000
+
 #I want to show the history of the price changes after every step
 history = [price]
 
@@ -39,6 +44,7 @@ for i in range(390):
     history.append(price)
 
 plot_times = [start_time + timedelta(minutes=j) for j in range(len(history))]
+
 #I have installed the library called matplotlib to create a visual representation of the price changes
 import matplotlib.pyplot as plt
 
@@ -48,15 +54,16 @@ plt.plot(plot_times, history)
 plt.title("Simple Random Walk")
 plt.xlabel("Time (minutes)")
 plt.ylabel("Price")
-# 1. Get the current "axes" (the plot itself)
+
+# Getting the current "axes" (the plot itself)
 ax = plt.gca()
 
-# 2. Format the time to only show Hour:Minute (e.g., 09:30)
+# Formatting the time to only show Hour:Minute
 ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
 
-# 3. Tell the graph to only show a label every 30 minutes
+# Telling the graph to only show a label every 30 minutes
 ax.xaxis.set_major_locator(mdates.MinuteLocator(byminute=[0, 30]))
 
-# 4. Tilt the labels so they don't overlap (optional but looks pro)
+# Tilting the labels so they don't overlap
 plt.gcf().autofmt_xdate()
 plt.show()
