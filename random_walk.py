@@ -1,5 +1,5 @@
 
-#Current formula: Price(t+1) = Price(t) + step
+#Current formula: Price(t+1) = Price(t) + step + drift
 
 
 import matplotlib.dates as mdates
@@ -23,11 +23,13 @@ price = 1000
 #I want to show the history of the price changes after every step
 history = [price]
 
-#I want to tell python to make the price take 390 steps
+#I want to add drift to the price changes. Drift is a constant value that represents the expected return of the stock over time.
+drift = 0.1
 
+#I want to tell python to make the price take 390 steps
 for i in range(390):
     step = random.uniform(-10, 10)
-    price = price + step
+    price = price + step + drift
     
     if price <= 0:
         price = 0
