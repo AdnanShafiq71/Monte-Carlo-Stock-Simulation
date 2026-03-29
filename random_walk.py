@@ -1,5 +1,5 @@
 
-#Current formula: Price(t+1) = Price(t) + step + drift
+#Current formula: Price(t+1) = Price(t) * (1 + percentage change)
 
 
 import matplotlib.dates as mdates
@@ -13,7 +13,7 @@ times = [start_time]
 import random
 
 #I am adding volatility to the price changes. Some days may be quiet and some more volatile. We need a variable that can represent this.
-volatility = 5
+volatility = 0.01
 
 #I am generating a random number between -10 and 10 and storing it as the variable 'step'
 #I could choose random.randint if I wanted to generate a random integer however, a random decimal seems more appropriate for a fluctuating stock price
@@ -29,12 +29,12 @@ price = 1000
 history = [price]
 
 #I want to add drift to the price changes. Drift is a constant value that represents the expected return of the stock over time.
-drift = 0.1
+drift = 0.0001
 
 #I want to tell python to make the price take 390 steps
 for i in range(390):
-    step = random.uniform(-10, 10)
-    price = price + step + drift
+    change_percentage = random.uniform(-volatility, volatility)
+    price = price * (1 + change_percentage + drift)
     
     if price <= 0:
         price = 0
