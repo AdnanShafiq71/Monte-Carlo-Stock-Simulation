@@ -1,3 +1,8 @@
+#I want the x axis of the graph to have time rather than counting the number of steps as days. I want to make each step one minute
+from datetime import datetime, timedelta
+start_time = datetime(2026, 4, 1, 9, 30) #Starting time of the stock market
+times = [start_time]
+
 #I am importing the random module to generate random numbers
 import random
 
@@ -15,9 +20,10 @@ history = [price]
 
 print("Loop is starting...") # Diagnostic print
 
-for i in range(1000):
+for i in range(390):
     step = random.uniform(-10, 10)
     price = price + step
+    times.append(times[-1] + timedelta(minutes=1)) #Increases the time by one minute for each step
     
     if price <= 0:
         price = 0
@@ -34,6 +40,6 @@ print(history)
 import matplotlib.pyplot as plt
 plt.plot(history)
 plt.title("Simple Random Walk")
-plt.xlabel("Days")
+plt.xlabel("Time (minutes)")
 plt.ylabel("Price")
 plt.show()
