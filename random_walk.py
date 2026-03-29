@@ -1,7 +1,8 @@
 
 #Current formula: Price(t+1) = Price(t) * (1 + percentage change)
 
-
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import matplotlib.dates as mdates
 
 #I want the x axis of the graph to have time rather than counting the number of steps as days. I want to make each step one minute
@@ -11,6 +12,9 @@ times = [start_time]
 
 #I am importing the random module to generate random numbers
 import random
+
+#I want to run this random walk multiple times as a Monte Carlo simulation
+simulations = 1000
 
 #I am adding volatility to the price changes. Some days may be quiet and some more volatile. We need a variable that can represent this.
 volatility = 0.01
@@ -31,29 +35,30 @@ history = [price]
 #I want to add drift to the price changes. Drift is a constant value that represents the expected return of the stock over time.
 drift = 0.0001
 
-#I want to tell python to make the price take 390 steps
-for i in range(390):
-    change_percentage = random.uniform(-volatility, volatility)
-    price = price * (1 + change_percentage + drift)
+plt.figure(figsize=(12, 7))
+
+#I want to run the random walk 1000 times to see the different possible outcomes of the stock price.
+for s in range(simulations):
+    price = 1000
+    history = [price]
+
+    #I want to tell python to make the price take 390 steps
+    for i in range(390):
+        change_percentage = random.uniform(-volatility, volatility)
+        price = price * (1 + change_percentage + drift)
     
-    if price <= 0:
-        price = 0
+        if price <= 0:
+            price = 0
+            history.append(price)
+            break
         history.append(price)
-        break
 
-    history.append(price)
+    plot_times = [start_time + timedelta(minutes=j) for j in range(len(history))]
+    plt.plot(plot_times, history, alpha = 0.05, linewidth = 0.5, color = "blue")
 
-plot_times = [start_time + timedelta(minutes=j) for j in range(len(history))]
-
-#I have installed the library called matplotlib to create a visual representation of the price changes
-import matplotlib.pyplot as plt
-
-plot_times = [start_time + timedelta(minutes=j) for j in range(len(history))]
-
-plt.plot(plot_times, history)
-plt.title("Simple Random Walk")
+plt.title("Monte Carlo Simulation of Stock Price Changes")
 plt.xlabel("Time (minutes)")
-plt.ylabel("Price")
+plt.ylabel("Stock Price ($)")
 
 # Getting the current "axes" (the plot itself)
 ax = plt.gca()
@@ -66,4 +71,5 @@ ax.xaxis.set_major_locator(mdates.MinuteLocator(byminute=[0, 30]))
 
 # Tilting the labels so they don't overlap
 plt.gcf().autofmt_xdate()
+plt.grid(True, linestyle=':', alpha=0.05)
 plt.show()
