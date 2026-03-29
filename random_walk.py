@@ -18,9 +18,8 @@ print(step)
 price = 1000
 #I want to show the history of the price changes after every step
 history = [price]
-#I want to tell python to make the price take 100 steps
 
-print("Loop is starting...") # Diagnostic print
+#I want to tell python to make the price take 390 steps
 
 for i in range(390):
     step = random.uniform(-10, 10)
@@ -29,12 +28,11 @@ for i in range(390):
     if price <= 0:
         price = 0
         history.append(price)
-        print("Stock went bankrupt!")
         break
 
     history.append(price)
 
-final_times = [start_time + timedelta(minutes=j) for j in range(len(history))]
+plot_times = [start_time + timedelta(minutes=j) for j in range(len(history))]
 #I have installed the library called matplotlib to create a visual representation of the price changes
 import matplotlib.pyplot as plt
 
@@ -51,7 +49,7 @@ ax = plt.gca()
 ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
 
 # 3. Tell the graph to only show a label every 30 minutes
-ax.xaxis.set_major_locator(mdates.MinuteLocator(interval=30))
+ax.xaxis.set_major_locator(mdates.MinuteLocator(byminute=[0, 30]))
 
 # 4. Tilt the labels so they don't overlap (optional but looks pro)
 plt.gcf().autofmt_xdate()
